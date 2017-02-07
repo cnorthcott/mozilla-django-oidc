@@ -75,7 +75,15 @@ class OIDCAuthenticationBackend(object):
         if import_from_settings('OIDC_RP_CLIENT_SECRET_ENCODED', False):
             secret = base64.urlsafe_b64decode(self.OIDC_RP_CLIENT_SECRET)
         # Verify the token
-        verified_token = jws.verify(token, secret, algorithms=['HS256'])
+        verified_token = jws.verify(token, secret, algorithms=['HS256',
+                                                               'RS256',
+                                                               'HS384',
+                                                               'HS512',
+                                                               'RS384',
+                                                               'RS512',
+                                                               'ES256',
+                                                               'ES384',
+                                                               'ES512'])
         token_nonce = json.loads(verified_token).get('nonce')
 
         if import_from_settings('OIDC_USE_NONCE', True) and nonce != token_nonce:
